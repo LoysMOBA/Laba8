@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using IMT;
+using System.Xml;
+using Newtonsoft.Json;
+using serilize = FileSystemMonitor.FormJson.serilize;
+using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace FileSystemMonitor
 {
@@ -17,6 +24,7 @@ namespace FileSystemMonitor
         {
             InitializeComponent();
         }
+
 
         private void FileMonitorForm_Load(object sender, EventArgs e)
         {
@@ -31,8 +39,6 @@ namespace FileSystemMonitor
             fileSystemWatcher1.Deleted += new FileSystemEventHandler(LogFileSystemChanges);
             //Событие возникающее при переименовании файла или каталога в заданном пути.
             fileSystemWatcher1.Renamed += new RenamedEventHandler(LogFileSystemRenaming);
-            //Событие возникающее при переполнении внутреннего буфера.
-            fileSystemWatcher1.Error += new ErrorEventHandler(LogBufferError);
 
             fileSystemWatcher2.SynchronizingObject = this;
             //Событие возникающее при изменении файла или каталога в заданном пути.
@@ -43,41 +49,18 @@ namespace FileSystemMonitor
             fileSystemWatcher2.Deleted += new FileSystemEventHandler(LogFileSystemChanges);
             //Событие возникающее при переименовании файла или каталога в заданном пути.
             fileSystemWatcher2.Renamed += new RenamedEventHandler(LogFileSystemRenaming);
-            //Событие возникающее при переполнении внутреннего буфера.
-            fileSystemWatcher2.Error += new ErrorEventHandler(LogBufferError);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             //Создание класса для вывода окна выбора директории
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-
-            //Выводим диалоговое окно для выбора каталога.
-            // Данный класс возвращает следующие значения:
-            // 1) Объект System.Windows.Forms.DialogResult.OK, 
-            //    если пользователь нажимает кнопку 
-            //    ОК в диалоговом окне;
-            // 2) Объект System.Windows.Forms.DialogResult.Cancel,  
-            //    если пользователь закрывает диалоговое окно.
             DialogResult result = fbd.ShowDialog();
 
-            //Если пользователь выбрал директорию
-            //и нажал ОК, то выводим путь в textBox1
             if (result == DialogResult.OK)
             {
-                //Вывод пути к  
-                //выбранной директории 
                 textBox1.Text = fbd.SelectedPath;
             }
-        }
-
-        void LogBufferError(object sender, ErrorEventArgs e)
-        {
-            string log = string.Format("{0:G} | Переполнен внутренний буфер", DateTime.Now);
-            //Добавляем новую запись события.
-            listBox1.Items.Add(log);
-            //Выбираем последнюю добавленную запись.
-            listBox1.SelectedIndex = listBox1.Items.Count - 1;
         }
 
         void LogFileSystemRenaming(object sender, RenamedEventArgs e)
@@ -87,6 +70,17 @@ namespace FileSystemMonitor
             listBox1.Items.Add(log);
             //Выбираем последнюю добавленную запись.
             listBox1.SelectedIndex = listBox1.Items.Count - 1;
+
+            XDocument xdoc = XDocument.Load(@"C:\Users\ggggg\Downloads\FileSystemMonitor\FileSystemMonitor\FileSystemMonitor\XMLFile1.xml");
+            XElement root = xdoc.Element("root");
+            root.Add(new XElement("Log", log));
+            xdoc.Save(@"C:\Users\ggggg\Downloads\FileSystemMonitor\FileSystemMonitor\FileSystemMonitor\XMLFile1.xml");
+         
+
+            List<serilize> _data = new List<serilize>();
+            _data.Add(new serilize("Логи", log));
+            string json = JsonConvert.SerializeObject(_data.ToArray());
+            File.AppendAllText(@"C:\Users\ggggg\Downloads\FileSystemMonitor\FileSystemMonitor\FileSystemMonitor\json1.json", json);
         }
 
         void LogFileSystemChanges(object sender, FileSystemEventArgs e)
@@ -96,6 +90,19 @@ namespace FileSystemMonitor
             listBox1.Items.Add(log);
             //Выбираем последнюю добавленную запись.
             listBox1.SelectedIndex = listBox1.Items.Count - 1;
+            
+            XDocument xdoc = XDocument.Load(@"C:\Users\ggggg\Downloads\FileSystemMonitor\FileSystemMonitor\FileSystemMonitor\XMLFile1.xml");
+            XElement root = xdoc.Element("root");
+            root.Add(new XElement("Log", log));
+            xdoc.Save(@"C:\Users\ggggg\Downloads\FileSystemMonitor\FileSystemMonitor\FileSystemMonitor\XMLFile1.xml");
+
+            List<serilize> _data = new List<serilize>();
+            _data.Add(new serilize("Логи", log)); 
+
+            string json = JsonConvert.SerializeObject(_data.ToArray());
+
+            File.AppendAllText(@"C:\Users\ggggg\Downloads\FileSystemMonitor\FileSystemMonitor\FileSystemMonitor\json1.json", json+"\n");
+
         }
 
         private void MonitoringInput_CheckedChanged(object sender, EventArgs e)
@@ -116,10 +123,6 @@ namespace FileSystemMonitor
                 //контролируемых в каталоге. 
                 //По умолчанию используется "*.*" (отслеживаются все файлы).       
                 fileSystemWatcher1.Filter = textBox2.Text;
-
-                //Задаем значение, показывающее необходимость контроля вложенных
-                //каталогов по указанному пути.
-                fileSystemWatcher1.IncludeSubdirectories = checkBox10.Checked;
 
                 //Отслеживаемые изменения.
                 NotifyFilters notificationFilters = new NotifyFilters();
@@ -172,9 +175,6 @@ namespace FileSystemMonitor
                 //По умолчанию используется "*.*" (отслеживаются все файлы).       
                 fileSystemWatcher2.Filter = textBox2.Text;
 
-                //Задаем значение, показывающее необходимость контроля вложенных
-                //каталогов по указанному пути.
-                fileSystemWatcher2.IncludeSubdirectories = checkBox10.Checked;
 
                 //Отслеживаемые изменения.
                 NotifyFilters notificationFilters2 = new NotifyFilters();
@@ -260,7 +260,6 @@ namespace FileSystemMonitor
                     {
                         File.Delete(s2);
                         File.Copy(s1, s2);
-                        Console.WriteLine("Update file {0} from file {1}", s1, s2);
                     }
                 }
             }
@@ -269,6 +268,23 @@ namespace FileSystemMonitor
             {
                 SyncDir(s, ToDir + "\\" + Path.GetFileName(s));
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            FormXML newForm = new FormXML();
+            newForm.Show();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            FormJson newForm = new FormJson();
+            newForm.Show();
+        }
+
+        private void ControlGroup_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

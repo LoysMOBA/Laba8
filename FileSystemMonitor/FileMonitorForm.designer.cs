@@ -33,6 +33,8 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.ControlGroup = new System.Windows.Forms.GroupBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -40,7 +42,6 @@
             this.FileFilterLabel = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.NotificationsGroup = new System.Windows.Forms.GroupBox();
-            this.checkBox10 = new System.Windows.Forms.CheckBox();
             this.checkBox9 = new System.Windows.Forms.CheckBox();
             this.checkBox8 = new System.Windows.Forms.CheckBox();
             this.checkBox7 = new System.Windows.Forms.CheckBox();
@@ -88,6 +89,8 @@
             // 
             this.ControlGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.ControlGroup.Controls.Add(this.button4);
+            this.ControlGroup.Controls.Add(this.button3);
             this.ControlGroup.Controls.Add(this.textBox3);
             this.ControlGroup.Controls.Add(this.button2);
             this.ControlGroup.Controls.Add(this.button1);
@@ -102,6 +105,27 @@
             this.ControlGroup.TabIndex = 0;
             this.ControlGroup.TabStop = false;
             this.ControlGroup.Text = "Настройки мониторинга";
+            this.ControlGroup.Enter += new System.EventHandler(this.ControlGroup_Enter);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(693, 80);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(66, 23);
+            this.button4.TabIndex = 9;
+            this.button4.Text = "Json";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(361, 80);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 8;
+            this.button3.Text = "XML";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // textBox3
             // 
@@ -165,7 +189,6 @@
             // NotificationsGroup
             // 
             this.NotificationsGroup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.NotificationsGroup.Controls.Add(this.checkBox10);
             this.NotificationsGroup.Controls.Add(this.checkBox9);
             this.NotificationsGroup.Controls.Add(this.checkBox8);
             this.NotificationsGroup.Controls.Add(this.checkBox7);
@@ -180,18 +203,6 @@
             this.NotificationsGroup.TabIndex = 1;
             this.NotificationsGroup.TabStop = false;
             this.NotificationsGroup.Text = "События";
-            // 
-            // checkBox10
-            // 
-            this.checkBox10.AutoSize = true;
-            this.checkBox10.Checked = true;
-            this.checkBox10.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox10.Location = new System.Drawing.Point(6, 203);
-            this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(219, 17);
-            this.checkBox10.TabIndex = 8;
-            this.checkBox10.Text = "&Контролировать вложенные каталоги";
-            this.checkBox10.UseVisualStyleBackColor = true;
             // 
             // checkBox9
             // 
@@ -304,9 +315,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(798, 368);
+            this.Controls.Add(this.ControlGroup);
             this.Controls.Add(this.NotificationsGroup);
             this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.ControlGroup);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FileMonitorForm";
             this.Text = "Cинхронизатор";
@@ -339,12 +350,13 @@
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox10;
         private System.Windows.Forms.Button button1;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBox3;
         private System.IO.FileSystemWatcher fileSystemWatcher2;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button3;
     }
 }
 
